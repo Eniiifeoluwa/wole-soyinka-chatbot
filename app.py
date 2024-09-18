@@ -8,13 +8,12 @@ import json
 import torch.nn as nn
 import nltk
 
-# Download NLTK's punkt tokenizer
 nltk.download('punkt')
-
+nltk.download('punkt_tab')
 # Initialize LancasterStemmer
 stemmer = LancasterStemmer()
 
-# Define the ChatModel class
+
 class ChatModel(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(ChatModel, self).__init__()
