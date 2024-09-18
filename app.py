@@ -77,7 +77,7 @@ if 'welcomed' not in st.session_state:
 def user_message(message):
     st.markdown(f"""
         <div style="text-align: right; margin: 10px;">
-            <span style="background-color: #dcf8c6; padding: 10px; border-radius: 10px; display: inline-block; color: black;">
+            <span style="background-color: #dcf8c6; padding: 10px; border-radius: 10px; display: inline-block; color: black; max-width: 60%;">
                 {message} 😊
             </span>
         </div>
@@ -86,7 +86,7 @@ def user_message(message):
 def bot_message(message):
     st.markdown(f"""
         <div style="text-align: left; margin: 10px;">
-            <span style="background-color: #f1f0f0; padding: 10px; border-radius: 10px; display: inline-block; color: black;">
+            <span style="background-color: #f1f0f0; padding: 10px; border-radius: 10px; display: inline-block; color: black; max-width: 60%;">
                 {message} 🤖
             </span>
         </div>
@@ -113,5 +113,3 @@ else:
         st.session_state.history.append({'user': prompt, 'bot': response})
         user_message(prompt)
         bot_message(response)
-
-        
