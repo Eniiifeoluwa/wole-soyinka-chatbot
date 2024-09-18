@@ -6,8 +6,14 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import LancasterStemmer
 import json
 import torch.nn as nn
-import nltk 
+import nltk
+
+# Download NLTK's punkt tokenizer
 nltk.download('punkt')
+
+# Initialize LancasterStemmer
+stemmer = LancasterStemmer()
+
 # Define the ChatModel class
 class ChatModel(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
@@ -42,7 +48,7 @@ def tokenize_and_stem(word):
 
 def create_bow(pattern, all_words):
     bag_of_words = [0 for _ in range(len(all_words))]
-    for word in word_tokenize(pattern):
+    for word in word_tokenize(pattern):  # Ensure 'punkt' is downloaded for tokenization
         stemmed_word = tokenize_and_stem(word)
         if stemmed_word in all_words:
             bag_of_words[all_words.index(stemmed_word)] = 1
@@ -62,6 +68,7 @@ responses = {}
 for intent in data['book']:
     responses[intent['tag']] = intent['responses']
 
+# Streamlit UI
 st.title("Chatbot for 'Death and the King's Horseman'")
 
 if 'history' not in st.session_state:
