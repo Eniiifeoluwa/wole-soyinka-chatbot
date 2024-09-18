@@ -66,7 +66,7 @@ responses = {}
 for intent in data['book']:
     responses[intent['tag']] = intent['responses']
 
-st.title("📚 Chatbot for 'Death and the King's Horseman' 🗣️")
+st.title("📚 Chatbot for 'Death and the King's Horseman'")
 
 if 'history' not in st.session_state:
     st.session_state.history = []
