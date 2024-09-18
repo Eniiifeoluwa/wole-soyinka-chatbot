@@ -7,12 +7,12 @@ from nltk.stem import LancasterStemmer
 import json
 import torch.nn as nn
 import nltk
+import random
 
 nltk.download('punkt')
 nltk.download('punkt_tab')
-# Initialize LancasterStemmer
-stemmer = LancasterStemmer()
 
+stemmer = LancasterStemmer()
 
 class ChatModel(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
@@ -28,7 +28,6 @@ class ChatModel(nn.Module):
         x = self.fc3(x)
         return self.softmax(x)
 
-# Load the model and data
 input_size = len(pickle.load(open('all_words.pkl', 'rb')))
 hidden_size = 8
 output_size = len(pickle.load(open('classes.pkl', 'rb')))
@@ -47,7 +46,7 @@ def tokenize_and_stem(word):
 
 def create_bow(pattern, all_words):
     bag_of_words = [0 for _ in range(len(all_words))]
-    for word in word_tokenize(pattern):  # Ensure 'punkt' is downloaded for tokenization
+    for word in word_tokenize(pattern):
         stemmed_word = tokenize_and_stem(word)
         if stemmed_word in all_words:
             bag_of_words[all_words.index(stemmed_word)] = 1
@@ -67,8 +66,7 @@ responses = {}
 for intent in data['book']:
     responses[intent['tag']] = intent['responses']
 
-# Streamlit UI
-st.title("Chatbot for 'Death and the King's Horseman'")
+st.title("📚 Chatbot for 'Death and the King's Horseman' 🗣️")
 
 if 'history' not in st.session_state:
     st.session_state.history = []
@@ -76,24 +74,42 @@ if 'history' not in st.session_state:
 if 'welcomed' not in st.session_state:
     st.session_state.welcomed = False
 
+def user_message(message):
+    st.markdown(f"""
+        <div style="text-align: right; margin: 10px;">
+            <span style="background-color: #dcf8c6; padding: 10px; border-radius: 10px; display: inline-block; color: black;">
+                {message} 😊
+            </span>
+        </div>
+    """, unsafe_allow_html=True)
+
+def bot_message(message):
+    st.markdown(f"""
+        <div style="text-align: left; margin: 10px;">
+            <span style="background-color: #f1f0f0; padding: 10px; border-radius: 10px; display: inline-block; color: black;">
+                {message} 🤖
+            </span>
+        </div>
+    """, unsafe_allow_html=True)
+
 if not st.session_state.welcomed:
     welcome_prompt = st.text_input("Say 'hello' to start the conversation:", key="welcome_prompt")
     if welcome_prompt.lower() == 'hello':
-        welcome_response = "Welcome! I'm here to discuss 'Death and the King's Horseman' by Wole Soyinka. How can I assist you today?"
-        st.session_state.history.append({'question': welcome_prompt, 'answer': welcome_response})
-        st.write(f"**User😍:** {welcome_prompt}")
-        st.write(f"**Chatbot😎:** {welcome_response}")
+        welcome_response = "Welcome! 📖 I'm here to discuss 'Death and the King's Horseman' by Wole Soyinka. How can I assist you today?"
+        st.session_state.history.append({'user': welcome_prompt, 'bot': welcome_response})
+        user_message(welcome_prompt)
+        bot_message(welcome_response)
         st.session_state.welcomed = True
 else:
     for entry in st.session_state.history:
-        st.write(f"**User😍:** {entry['question']}")
-        st.write(f"**Chatbot😎:** {entry['answer']}")
+        user_message(entry['user'])
+        bot_message(entry['bot'])
 
     prompt = st.text_input("Enter your prompt:", key="conversation_prompt")
 
     if prompt:
         predicted_class = predict_class(prompt)
-        response = np.random.choice(responses.get(predicted_class, ["Sorry, I didn't understand that."]))
-        st.session_state.history.append({'question': prompt, 'answer': response})
-        st.write(f"**User😍:** {prompt}")
-        st.write(f"**Chatbot😎:** {response}")
+        response = random.choice(responses.get(predicted_class, ["Sorry, I didn't understand that. 😕"]))
+        st.session_state.history.append({'user': prompt, 'bot': response})
+        user_message(prompt)
+        bot_message(response)
