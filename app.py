@@ -5,6 +5,7 @@ import numpy as np
 from nltk.tokenize import word_tokenize
 from nltk.stem import LancasterStemmer
 import json
+import torch.nn as nn
 
 # Define the ChatModel class
 class ChatModel(nn.Module):
