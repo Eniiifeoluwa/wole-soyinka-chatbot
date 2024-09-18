@@ -6,6 +6,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import LancasterStemmer
 import json
 import torch.nn as nn
+import nltk 
 nltk.download('punkt')
 # Define the ChatModel class
 class ChatModel(nn.Module):
