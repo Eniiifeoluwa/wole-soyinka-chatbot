@@ -15,24 +15,27 @@ nltk.download('punkt_tab')
 stemmer = LancasterStemmer()
 
 class ChatModel(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, input_size, hidden_size1, hidden_size2, hidden_size3, output_size):
         super(ChatModel, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, output_size)
+        self.fc1 = nn.Linear(input_size, hidden_size1)
+        self.fc2 = nn.Linear(hidden_size1, hidden_size2)
+        self.fc3 = nn.Linear(hidden_size2, hidden_size3)
+        self.fc4 = nn.Linear(hidden_size3, output_size)
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
-        x = self.fc3(x)
-        return self.softmax(x)
+        x = torch.relu(self.fc3(x))
+        return self.softmax(self.fc4(x))
 
 input_size = len(pickle.load(open('all_words.pkl', 'rb')))
-hidden_size = 8
+hidden_size = hidden_size1 = 64
+hidden_size2 = 32
+hidden_size3 = 16
 output_size = len(pickle.load(open('classes.pkl', 'rb')))
 
-model = ChatModel(input_size, hidden_size, output_size)
+model = ChatModel(input_size, hidden_size1, hidden_size2, hidden_size3, output_size)
 model.load_state_dict(torch.load('chat_model.pth'))
 model.eval()
 
