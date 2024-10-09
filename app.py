@@ -36,7 +36,7 @@ hidden_size3 = 16
 output_size = len(pickle.load(open('classes.pkl', 'rb')))
 
 model = ChatModel(input_size, hidden_size1, hidden_size2, hidden_size3, output_size)
-model.load_state_dict(torch.load('chat_model.pth'))
+model.load_state_dict(torch.load('chat_model.pth', map_location=torch.device('cpu')))
 model.eval()
 
 with open('all_words.pkl', 'rb') as f:
