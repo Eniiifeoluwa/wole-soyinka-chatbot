@@ -30,7 +30,7 @@ class ChatModel(nn.Module):
         return self.softmax(self.fc4(x))
 
 input_size = len(pickle.load(open('all_words.pkl', 'rb')))
-hidden_size = hidden_size1 = 64
+hidden_size1 = 64
 hidden_size2 = 32
 hidden_size3 = 16
 output_size = len(pickle.load(open('classes.pkl', 'rb')))
